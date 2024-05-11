@@ -28,6 +28,7 @@ body {
   align-items: center;
   margin: 120px auto 0 auto;
   max-width: 500px;
+  padding: 0 10px 0 10px;
 }
 
 .stats-container {
@@ -98,8 +99,8 @@ form {
 }
 
 .task-edit-input {
+  flex: 1;
   padding-right: 30px;
-  width: 300px;
   direction: ltr;
   line-height: 21px;
   font-size: 14px;
@@ -112,15 +113,11 @@ form {
   border-width: 0;
 }
 
-summary {
-  display: inline-block;
-  cursor: pointer;
-}
-
 .button {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  border: none;
   display: flex;
   justify-content: center;
   align-items: center;
