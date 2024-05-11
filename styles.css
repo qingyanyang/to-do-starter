@@ -1,0 +1,211 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style-type: none;
+}
+
+:root {
+  --background: #000430;
+  --secondaryBackground: #171c48;
+  --text: #fff;
+  --purple: #828dff;
+  --teal: #24feee;
+  --error: #de3e53;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 120px auto 0 auto;
+  max-width: 500px;
+}
+
+.stats-container {
+  display: flex;
+  border: 2px solid var(--purple);
+  border-radius: 20px;
+  padding: 30px;
+  gap: 50px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+#numbers {
+  width: 100px;
+  height: 100px;
+  background-color: var(--purple);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#progressBar {
+  height: 10px;
+  background-color: var(--secondaryBackground);
+  border-radius: 30px;
+}
+
+#progress {
+  background-color: var(--teal);
+  height: 100%;
+  width: 0%;
+  border-radius: 30px;
+}
+
+form {
+  margin: 30px 0 10px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#task-input {
+  flex: 1;
+  direction: ltr;
+  height: 56px;
+  max-height: 104px;
+  line-height: 24px;
+  padding: 16px;
+  font-size: 16px;
+  overflow: hidden;
+  resize: none;
+  border: 1px solid var(--purple);
+  background-color: var(--secondaryBackground);
+  color: var(--text);
+  border-radius: 10px;
+  outline: none;
+}
+
+.task-edit-input {
+  padding-right: 30px;
+  width: 300px;
+  direction: ltr;
+  line-height: 21px;
+  font-size: 14px;
+  min-height: 60px;
+  overflow: hidden;
+  resize: none;
+  background-color: var(--secondaryBackground);
+  color: var(--text);
+  outline: none;
+  border-width: 0;
+}
+
+summary {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--purple);
+  color: var(--text);
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.text-button {
+  background-color: var(--secondaryBackground);
+  color: var(--purple);
+  font-size: 15px;
+  outline: none;
+  border-width: 0;
+  letter-spacing: 1px;
+}
+
+.instruction-text {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.counter-container {
+  height: 16px;
+  color: var(--text);
+}
+
+.error-instruction {
+  height: 16px;
+  color: var(--error);
+}
+
+.task-area {
+  width: 100%;
+}
+
+.task-list {
+  max-height: 260px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.no-task-sign {
+  display: flex;
+  width: 100%;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background-color: var(--secondaryBackground);
+  color: var(--purple);
+  border-radius: 10px;
+  outline: none;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  padding: 16px;
+  background-color: var(--secondaryBackground);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.left-part {
+  display: flex;
+  align-items: first baseline;
+  gap: 16px;
+}
+
+.completed :nth-child(2) {
+  text-decoration: line-through;
+  color: var(--teal);
+}
+
+.right-part {
+  display: flex;
+  gap: 16px;
+}
+
+img {
+  width: 20px;
+  height: 20px;
+}
