@@ -89,7 +89,6 @@ const signContainer = document.querySelector(".sign-container");
 addButton.addEventListener("click", handleAddButtonClick);
 searchButton.addEventListener("click", handleSearchButtonClick);
 taskList.addEventListener("click", handleTaskListClick);
-
 /**
  * Handles the add button click event to add a new task.
  */
@@ -110,9 +109,9 @@ function handleAddButtonClick(event) {
     renderTaskArea();
     renderProgress();
     scrollToBottom();
-    input.value = "";
+    input.value="";
     renderCounter(input.value);
-    input.style.height = "56px";
+    autoGrow(input);
     input.focus();
 }
 
@@ -139,6 +138,8 @@ function handleTaskListClick(event) {
         handleDeleteButtonClick(index);
     } else if (target.classList.contains("task-check-box")) {
         handleCheckboxClick(index);
+    } else if (target.classList.contains("task-edit-input")){
+        handleInitialHeightGrow(index);
     }
 }
 
@@ -185,10 +186,9 @@ function handleCheckboxClick(index) {
 /**
  * Function to control UI
  */
-function autoGrow(element, initalHeight) {
-    element.style.height = `${initalHeight}px`;
+function autoGrow(element) {
+    element.style.height = "0px";
     element.style.height = (element.scrollHeight) + "px";
-    renderCounter(element.value);
 }
 
 function scrollToBottom() {
@@ -252,10 +252,10 @@ const renderTaskArea = ({ targetTask = tasks, isSearch = false } = {}) => {
 
                 <div class="task-item">
                     <div class="left-part ${task.completed ? "completed" : ""}">
+                    <div class="checkbox-wrapper" >
                         <input type="checkbox" class="task-check-box" data-index="${index}" ${task.completed ? "checked" : ""}> 
-
-                <textArea class="task-edit-input" data-index="${index}" disabled maxlength="80">${task.taskName}</textArea>
-    
+                    </div >
+                <textArea class="task-edit-input" oninput="autoGrow(this)"  data-index="${index}" disabled maxlength="80">${task.taskName}</textArea>
                     </div>
                     <div class="right-part">
                         <button class="text-button edit-button" data-index="${index}">Edit</button>
@@ -264,7 +264,13 @@ const renderTaskArea = ({ targetTask = tasks, isSearch = false } = {}) => {
                     </div>
                 
               `;
+        
             taskList.append(taskItem);
+            // manually trigger input autogrow function
+            const textarea = taskItem.querySelector('.task-edit-input');
+            const event = new Event('input');
+            textarea.dispatchEvent(event);
+            
         });
     } else {
         renderNoTaskSign(isSearch);  // Display a no-task sign if no tasks are available.

@@ -4,7 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>to do list</title>
-        <link rel="stylesheet" href="./styles.css">
+        <link rel="stylesheet" href="./css/styles.css">
+        <link rel="stylesheet" href="./css/switch.css">
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
@@ -13,7 +14,7 @@
             <div class="stats-container">
                 <div class="details">
                     <div class="details-text">
-                        <h1>Todo App</h1>
+                        <h1>To do App</h1>
                         <p>keep it up!</p>
                     </div>
                     <div id="progressBar">
@@ -25,7 +26,7 @@
                 </div>
             </div>
             <form action>
-                <textarea oninput="autoGrow(this,56)" type="text" id="task-input"
+                <textarea oninput="autoGrow(this);renderCounter(this.value);" type="text" id="task-input"
                     placeholder="Write your task" maxlength="80"></textarea>
                 <button type="submit" class="button add-button">+</button>
                 <button type="submit" class="button search-button"><i
