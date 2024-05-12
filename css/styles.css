@@ -181,13 +181,15 @@ form {
 }
 
 .task-edit-input {
+  /* white-space: nowrap; */
+  text-overflow: ellipsis;
+  overflow: hidden;
   width: 100%;
   padding-right: 30px;
   direction: ltr;
-  /* height:21px; */
   line-height: 21px;
   font-size: 14px;
-  overflow: hidden;
+  height: 21px;
   display: block;
   resize: none;
   background-color: var(--secondaryBackground);

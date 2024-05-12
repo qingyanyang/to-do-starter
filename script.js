@@ -138,9 +138,7 @@ function handleTaskListClick(event) {
         handleDeleteButtonClick(index);
     } else if (target.classList.contains("task-check-box")) {
         handleCheckboxClick(index);
-    } else if (target.classList.contains("task-edit-input")){
-        handleInitialHeightGrow(index);
-    }
+    } 
 }
 
 /**
@@ -158,6 +156,7 @@ function handleEditButtonClick(target, index) {
         editTask(index, taskInputs[index].value);
         renderTaskArea();
     } else {
+        taskInputs[index].value = tasks[index].taskName;
         taskInputs[index].focus();
         const value = taskInputs[index].value;
         taskInputs[index].value = "";  // Clear and reset the value to move cursor to end.
@@ -255,7 +254,7 @@ const renderTaskArea = ({ targetTask = tasks, isSearch = false } = {}) => {
                     <div class="checkbox-wrapper" >
                         <input type="checkbox" class="task-check-box" data-index="${index}" ${task.completed ? "checked" : ""}> 
                     </div >
-                <textArea class="task-edit-input" oninput="autoGrow(this)"  data-index="${index}" disabled maxlength="80">${task.taskName}</textArea>
+                        <textArea class="task-edit-input" oninput="autoGrow(this)" onfocus="autoGrow(this)" data-index="${index}" disabled maxlength="80">${task.taskName.length > 30 ? `${task.taskName.substring(0, 30)}...` : task.taskName}</textArea>
                     </div>
                     <div class="right-part">
                         <button class="text-button edit-button" data-index="${index}">Edit</button>
@@ -264,13 +263,8 @@ const renderTaskArea = ({ targetTask = tasks, isSearch = false } = {}) => {
                     </div>
                 
               `;
-        
+    
             taskList.append(taskItem);
-            // manually trigger input autogrow function
-            const textarea = taskItem.querySelector('.task-edit-input');
-            const event = new Event('input');
-            textarea.dispatchEvent(event);
-            
         });
     } else {
         renderNoTaskSign(isSearch);  // Display a no-task sign if no tasks are available.
