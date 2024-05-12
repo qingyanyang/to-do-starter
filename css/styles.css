@@ -27,9 +27,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10% auto 0 auto;
+  margin: 10vh auto 0 auto;
   max-width: 500px;
-  padding: 0 10px 20px 10px;
+  padding: 0 10px 10px 10px;
 }
 
 .stats-container {
@@ -154,7 +154,7 @@ form {
 }
 
 .task-list {
-  max-height: 260px;
+  max-height: 45vh;
   overflow-y: auto;
   width: 100%;
 }
