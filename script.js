@@ -26,7 +26,7 @@ const ErrorType = {
  *****************************************************************************/
 /**
  * Dynamic variable storing the list of tasks.
- * Example task format: [{ taskName: 'ask him out', completed: true }]
+ * Example task format: [{ taskID: 1, taskName: 'ask him out', completed: true }]
  */
 let tasks = [];
 
@@ -37,6 +37,7 @@ let tasks = [];
 const addTask = (taskName) => {
     // create new task
     const task = {
+        taskID: tasks.length + 1,
         taskName,
         completed: false
     }
@@ -45,18 +46,24 @@ const addTask = (taskName) => {
 }
 
 // 2. edit task
-const editTask = (index, updatedTaskName) => {
-    tasks[index].taskName = updatedTaskName;
+const editTask = (taskID, updatedTaskName) => {
+    const taskToUpdate = tasks.find(task => task.taskID === taskID);
+    if (taskToUpdate) {
+        taskToUpdate.taskName = updatedTaskName;
+    }
 }
 
-const toggleTaskComplete = (index) => {
-    tasks[index].completed = !tasks[index].completed;
+const toggleTaskComplete = (taskID) => {
+    const taskToUpdate = tasks.find(task => task.taskID === taskID);
+    if (taskToUpdate) {
+        taskToUpdate.completed = !taskToUpdate.completed;
+    }
 }
 
 // 3. delete task
-const deleteTask = (index) => {
+const deleteTask = (taskID) => {
     // get indexed task and remove
-    tasks.splice(index, 1);
+    tasks = tasks.filter(task => task.taskID !== taskID);
 }
 
 // 4. search task
@@ -88,7 +95,7 @@ const signContainer = document.querySelector(".sign-container");
 // Event listeners
 addButton.addEventListener("click", handleAddButtonClick);
 searchButton.addEventListener("click", handleSearchButtonClick);
-taskList.addEventListener("click", handleTaskListClick);
+
 /**
  * Handles the add button click event to add a new task.
  */
@@ -109,7 +116,7 @@ function handleAddButtonClick(event) {
     renderTaskArea();
     renderProgress();
     scrollToBottom();
-    input.value="";
+    input.value = "";
     renderCounter(input.value);
     autoGrow(input);
     input.focus();
@@ -126,37 +133,24 @@ function handleSearchButtonClick(event) {
 }
 
 /**
- * Handles click events on the task list to edit, delete, or toggle completion of tasks.
- */
-function handleTaskListClick(event) {
-    const target = event.target;
-    const index = target.dataset.index;
-
-    if (target.classList.contains("edit-button")) {
-        handleEditButtonClick(target, index);
-    } else if (target.classList.contains("delete-button")) {
-        handleDeleteButtonClick(index);
-    } else if (target.classList.contains("task-check-box")) {
-        handleCheckboxClick(index);
-    } 
-}
-
-/**
  * Handles logic for editing a task.
  */
-function handleEditButtonClick(target, index) {
+function handleEditButtonClick(target, taskID, index) {
     const taskInputs = document.querySelectorAll(".task-edit-input");
     const editButton = target;
     const isEditing = editButton.textContent === "Edit";
 
     editButton.textContent = isEditing ? "Save" : "Edit";
+    // get target input
     taskInputs[index].disabled = !isEditing;
 
     if (!isEditing) {
-        editTask(index, taskInputs[index].value);
-        renderTaskArea();
+        editTask(taskID, taskInputs[index].value);
+        const updatedTask = tasks.find(task => task.taskID === taskID);
+        renderTargetTaskItem(updatedTask, index);
     } else {
-        taskInputs[index].value = tasks[index].taskName;
+        const updatedTask = tasks.find(task => task.taskID === taskID);
+        taskInputs[index].value = updatedTask.taskName;
         taskInputs[index].focus();
         const value = taskInputs[index].value;
         taskInputs[index].value = "";  // Clear and reset the value to move cursor to end.
@@ -167,8 +161,8 @@ function handleEditButtonClick(target, index) {
 /**
  * Handles logic for deleting a task.
  */
-function handleDeleteButtonClick(index) {
-    deleteTask(index);
+function handleDeleteButtonClick(taskID) {
+    deleteTask(taskID);
     renderTaskArea();
     renderProgress();
 }
@@ -176,14 +170,14 @@ function handleDeleteButtonClick(index) {
 /**
  * Handles logic for toggling task completion status.
  */
-function handleCheckboxClick(index) {
-    toggleTaskComplete(index);
-    renderTaskArea();
+function handleCheckboxClick(taskID, index) {
+    toggleTaskComplete(taskID);
+    renderTargetTaskItem(tasks.find(task => task.taskID === taskID), index);
     renderProgress();
 }
 
 /**
- * Function to control UI
+ * Helper functions to control UI
  */
 function autoGrow(element) {
     element.style.height = "0px";
@@ -211,7 +205,7 @@ const renderErrorText = ({ errorType }) => {
         case ErrorType.DUPLICATE:
             errorText = TaskStrings.duplicateTaskError;
             break;
-            case ErrorType.EXCEED:
+        case ErrorType.EXCEED:
             errorText = TaskStrings.exceedLengthError;
             break;
         default:
@@ -237,6 +231,38 @@ const renderNoTaskSign = (isSearch) => {
 }
 
 /**
+ * Render single item
+ */
+const renderTaskItem = (task, index) => {
+    const taskItem = document.createElement("li");
+    taskItem.setAttribute("data-index", index);
+    taskItem.innerHTML = `
+        <div class="task-item">
+            <div class="left-part ${task.completed ? "completed" : ""}">
+                <div class="checkbox-wrapper" >
+                    <input type="checkbox" class="task-check-box" onclick="handleCheckboxClick(${task.taskID}, ${index})" ${task.completed ? "checked" : ""}> 
+                </div >
+                <textarea class="task-edit-input" oninput="autoGrow(this)" onfocus="autoGrow(this)" disabled maxlength="80">${task.taskName.length > 30 ? `${task.taskName.substring(0, 30)}...` : task.taskName}</textarea>
+            </div>
+            <div class="right-part">
+                <button class="text-button edit-button" onclick="handleEditButtonClick(this,${task.taskID}, ${index})">Edit</button>
+                <img class="delete-button" src="./img/bin.png" onclick="handleDeleteButtonClick(${task.taskID})">
+            </div>
+        </div>
+    `;
+    return taskItem;
+}
+
+/**
+ * Render target task
+ */
+const renderTargetTaskItem = (task, index) => {
+    const taskItem = renderTaskItem(task, index);
+    const oldTaskItem = taskList.querySelector(`li[data-index="${index}"]`);
+    taskList.replaceChild(taskItem, oldTaskItem);
+}
+
+/**
  * Renders the task area, either showing tasks or a no-task sign if empty.
  */
 const renderTaskArea = ({ targetTask = tasks, isSearch = false } = {}) => {
@@ -246,25 +272,8 @@ const renderTaskArea = ({ targetTask = tasks, isSearch = false } = {}) => {
 
     if (targetTask.length > 0) {
         targetTask.forEach((task, index) => {
-            const taskItem = document.createElement("li");
-            taskItem.innerHTML = `
-
-                <div class="task-item">
-                    <div class="left-part ${task.completed ? "completed" : ""}">
-                    <div class="checkbox-wrapper" >
-                        <input type="checkbox" class="task-check-box" data-index="${index}" ${task.completed ? "checked" : ""}> 
-                    </div >
-                        <textArea class="task-edit-input" oninput="autoGrow(this)" onfocus="autoGrow(this)" data-index="${index}" disabled maxlength="80">${task.taskName.length > 30 ? `${task.taskName.substring(0, 30)}...` : task.taskName}</textArea>
-                    </div>
-                    <div class="right-part">
-                        <button class="text-button edit-button" data-index="${index}">Edit</button>
-                        <img class="delete-button" src="./img/bin.png" data-index="${index}">
-                    </div>
-                    </div>
-                
-              `;
-    
-            taskList.append(taskItem);
+            const taskItem = renderTaskItem(task, index);
+            taskList.appendChild(taskItem);
         });
     } else {
         renderNoTaskSign(isSearch);  // Display a no-task sign if no tasks are available.
